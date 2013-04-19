@@ -1,0 +1,6 @@
+.DS_Store
+*.swp
+
+# Webstorm files
+.idea/workspace.xml
+.idea/tasks.xml
