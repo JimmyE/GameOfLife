@@ -16,6 +16,10 @@ Location.prototype.CalculateDistance = function(loc) {
     return dx;
 };
 
+Location.prototype.IsEqual = function (loc) {
+    return (loc.X === this.X && loc.Y === this.Y);
+};
+
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
 function Board(maxX, maxY){
@@ -26,6 +30,42 @@ function Board(maxX, maxY){
     }
     this.TopEdge = new Location(maxX, 0);
     this.RightEdge = new Location(0, maxY);
+
+    this._liveCells = [];
+    this.GetLiveCellCount = function() { return this._liveCells.length;};
+
+    this.InitializeBoard = function(cellList) {
+        this._liveCells = [];
+        for (var i = 0; i < cellList.length; i++) {
+
+            var cell = cellList[i];
+            if (cell.X < this.TopEdge.X && cell.Y < this.RightEdge.Y ){
+               var existingCell = this._getCellAt(cell);
+                if (!existingCell) {
+                    //console.log("add cell", cell);
+                    this._liveCells.push( cell );
+                }
+            }
+        }
+    };
+
+    this.PrintBoard = function() {
+        for (var i = 0; i < this._liveCells.length; i++) {
+            var cell = this._liveCells[i];
+            console.log("  " + cell.X + " " + cell.Y);
+        }
+    };
+
+    this._getCellAt = function (location) {
+        for (var i = 0; i < this._liveCells.length; i++) {
+            if ( this._liveCells[i].IsEqual(location)) {
+                return this._liveCells[i];
+            }
+        }
+        return null;
+    };
+
+
 }
 Board.prototype.AreNeighbors = function(cell1, cell2) {
     //return cell1._x == cell2._x;
@@ -57,5 +97,8 @@ Cell.prototype.IsAlive = function(neighborCnt) {
     return neighborCnt === 2 || neighborCnt === 3;
 };
 
+function CreateCell(x, y) {
+    return new Cell(new Location(x,y));
+}
 
 
