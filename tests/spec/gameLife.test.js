@@ -39,8 +39,7 @@ describe ("Class construction and initialization", function() {
 
 describe ("Board layout", function(){
     beforeEach(function() {
-        board = new Board();
-        board.Initialize();
+        board = new Board(3,3);
     });
 
     describe("AreNeighbors", function() {
@@ -65,4 +64,63 @@ describe ("Board layout", function(){
             expect(board.AreNeighbors(c1, c2)).toBeFalsy();
         });
     });
- });
+
+    describe ("Board creation", function() {
+        it ("when board created, sets max coordinates", function() {
+            var edgeX = 5;
+            var edgeY = 6;
+            var newBoard = new Board(edgeX, edgeY);
+
+            //console.log("newBoard:", newBoard);
+            expect(newBoard.TopEdge.X).toEqual(edgeX);
+            expect(newBoard.TopEdge.Y).toEqual(0);
+            expect(newBoard.RightEdge.X).toEqual(0);
+            expect(newBoard.RightEdge.Y).toEqual(edgeY);
+        });
+
+        it ("when board created, max coordinates are required", function() {
+            expect( function() { new Board(1);}).toThrow(new Error("Invalid board dimensions"));
+            expect( function() { new Board(0, 1);}).toThrow(new Error("Invalid board dimensions"));
+        });
+    });
+});
+
+
+describe ("Game creation", function() {
+    it ("When create new game, set the board dimensions", function() {
+        var game = new GameOfLife();
+        game.NewGame(1,2);
+
+        var board = game.GetBoard();
+        expect(board.TopEdge.X).toEqual(1);
+        expect(board.RightEdge.Y).toEqual(2);
+    });
+
+    it ("when board created with cells, live cells are saved", function() {
+        var board = new Board(10,10);
+        var cells = [ new Location(1,1), new Location(2,2)];
+
+        board.InitializeBoard(cells);
+        board.PrintBoard();
+        expect(board.GetLiveCellCount()).toEqual(cells.length);
+    });
+
+    it ("when board created, duplicate cells are ignored", function() {
+        var board = new Board(10,10);
+        var cells = [ new Location(1,1), new Location(2,2), new Location(2,2)];
+
+        board.InitializeBoard(cells);
+        expect(board.GetLiveCellCount()).toEqual(2);
+    });
+
+    it ("when board created, cells out of bounds are ignored", function() {
+        var board = new Board(10,10);
+        var cells = [ new Location(1,1), new Location(100, 2), new Location(2,100)];
+
+        board.InitializeBoard(cells);
+        expect(board.GetLiveCellCount()).toEqual(1);
+    });
+
+
+});
+
