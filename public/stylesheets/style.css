@@ -1,0 +1,24 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+a {
+  color: #00B7FF;
+}
+svg {
+  border: 1px #323232 solid;
+  height: 310px;
+  width: 310px;
+}
+.gof-ok {
+  fill: green;
+}
+.gof-plenty {
+  fill: blue;
+}
+.gof-danger {
+  fill: red;
+}
+.results {
+  margin-top: 20px;
+}
