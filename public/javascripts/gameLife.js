@@ -33,6 +33,7 @@ function Board(maxX, maxY){
 
     this._liveCells = [];
     this.GetLiveCellCount = function() { return this._liveCells.length;};
+    this.GetCells = function() { return this._liveCells;};
 
     this.InitializeBoard = function(cellList) {
         this._liveCells = [];
@@ -50,6 +51,12 @@ function Board(maxX, maxY){
     };
 
     this.PrintBoard = function() {
+
+        if (this._liveCells.length === 0 ){
+            console.log("Board is empty");
+            return;
+        }
+
         for (var i = 0; i < this._liveCells.length; i++) {
             var cell = this._liveCells[i];
             console.log("  " + cell.X + " " + cell.Y);
