@@ -27,7 +27,7 @@
 
     this.game = new GameOfLife();
 
-    console.log("game: ", this.game);
+    //console.log("game: ", this.game);
 
     this.startGame = function() {
         console.log("game: ", self.game);
@@ -57,9 +57,7 @@
             coor.push(self.convertLocationToD3Coordinate(cells[i]));
         }
 
-        console.log(coor);
-
-//        var data = [10,20,30];
+        //console.log(coor);
         var circle = svg.selectAll("circle")
             .data(coor);
 
@@ -82,8 +80,6 @@
         var newX = (location.X + 1) * 10;
         var newY = (location.Y + 1) * 10;
         return [ newX, newY];
-
-
     };
 
     this.getTestData1 = function () {
