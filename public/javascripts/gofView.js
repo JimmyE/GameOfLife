@@ -43,7 +43,8 @@
     };
 
     this.nextTurn = function() {
-
+        self.game.NextTurn();
+        self.renderBoard();
     };
 
     this.renderBoard = function() {
@@ -53,7 +54,9 @@
         var cells = board.GetCells();
         var coor = [];
 
+
         for (var i = 0; i < cells.length; i++ ){
+            console.log("cell:", cells[i]);
             coor.push(self.convertLocationToD3Coordinate(cells[i]));
         }
 
@@ -71,7 +74,14 @@
             .attr('cx', function(d) { return d[0];} )
             .attr('cy', function(d) { return d[1];} )
             .attr('r', 4)
-            .style('fill', 'blue');
+            .style('fill', function(d) {
+                console.log("d", d);
+                if (d[2] ){
+                    return 'green';  //safe, cell will live another turn
+                }
+                return 'blue';
+            });
+//            .style('fill', 'blue');
 
     };
 
@@ -79,7 +89,7 @@
         //return new [ (location.X + 1) * 10, (location.Y  + 1) * 10];
         var newX = (location.X + 1) * 10;
         var newY = (location.Y + 1) * 10;
-        return [ newX, newY];
+        return [ newX, newY, location.SafeCell];
     };
 
     this.getTestData1 = function () {
