@@ -1,16 +1,8 @@
-/**
- * Created with JetBrains WebStorm.
- * User: jim
- * Date: 5/6/13
- * Time: 8:48 PM
- * To change this template use File | Settings | File Templates.
- */
-
-
 // requires gameLife.js
 (function() {
     var self = this;
     var svg;
+    var turnCntr = 0;
 
 
     $(document).ready(function() {
@@ -21,6 +13,33 @@
 
         svg = d3.select('svg');
 
+        /*
+        svg.append("line")
+            .attr("x1", 1)
+            .attr("y1", 1)
+            .attr("x2", 1)
+            .attr("y2", 350)
+            .attr("stroke-width", 5)
+            .attr("stroke", "red");
+
+        svg.append("line")
+            .attr("x1", 1)
+            .attr("y1", 1)
+            .attr("x2", 350)
+            .attr("y2", 1)
+            .attr("stroke-width", 5)
+            .attr("stroke", "red");
+            */
+        /*
+        var borderPath = svg.append("rect")
+            .attr("x", 1)
+            .attr("y", 1)
+            .attr("height", 300)
+            .attr("width", 300)
+            .style("stroke", "red")
+            .style("fill", "none")
+            .style("stroke-width", 5);
+            */
     });
 
     //this.game;
@@ -39,43 +58,44 @@
         var board = self.game.GetBoard();
         board.InitializeBoard(cells);
 
+        self.turnCntr = 1;
         self.renderBoard();
     };
 
     this.nextTurn = function() {
+        self.turnCntr = self.turnCntr  + 1;
         self.game.NextTurn();
         self.renderBoard();
     };
 
     this.renderBoard = function() {
         var board = self.game.GetBoard();
-        //board.PrintBoard();
 
         var cells = board.GetCells();
+
+        console.log("turn #" + self.turnCntr + "  live cells " + cells.length);
+
         var coor = [];
 
-
         for (var i = 0; i < cells.length; i++ ){
-            console.log("cell:", cells[i]);
+        //    console.log("cell:", cells[i]);
             coor.push(self.convertLocationToD3Coordinate(cells[i]));
         }
 
         //console.log(coor);
-        var circle = svg.selectAll("circle")
-            .data(coor);
+        var d3Board = svg.selectAll("circle")
+                         .data(coor);
 
-        circle.enter().append("circle");
-
-        circle.exit().remove();
+        d3Board.enter().append("circle");
+        d3Board.exit().remove();
 
         //update/refresh
-        circle.transition()
+        d3Board.transition()
             .duration(1500)
-            .attr('cx', function(d) { return d[0];} )
-            .attr('cy', function(d) { return d[1];} )
+            .attr('cx', function(d) { return (d[0] + 1) * 10;} )
+            .attr('cy', function(d) { return (d[1] + 1) * 10;} )
             .attr('r', 4)
             .style('fill', function(d) {
-                console.log("d", d);
                 if (d[2] ){
                     return 'green';  //safe, cell will live another turn
                 }
@@ -86,15 +106,15 @@
     };
 
     this.convertLocationToD3Coordinate = function (location) {
-        //return new [ (location.X + 1) * 10, (location.Y  + 1) * 10];
-        var newX = (location.X + 1) * 10;
-        var newY = (location.Y + 1) * 10;
-        return [ newX, newY, location.SafeCell];
+//        var newX = (location.X + 1) * 10;
+//        var newY = (location.Y + 1) * 10;
+        return [ location.X, location.Y, location.SafeCell];
     };
 
     this.getTestData1 = function () {
 
-        var cells = [ new Location(1,1),
+        var cells = [
+            new Location(1,1),
             new Location(1,2),
             new Location(1,3),
             new Location(2,1),
@@ -113,7 +133,10 @@
             new Location(17,21),
             new Location(18,19),
 
-            new Location(12,20)
+            new Location(12,20),
+            new Location(0, 10),
+            new Location(0, 11)
+
         ];
         return cells;
     };

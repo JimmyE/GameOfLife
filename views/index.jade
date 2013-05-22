@@ -2,15 +2,12 @@ extends layout
 
 block content
     h1= title
-    p Welcome to #{title}
 
     block
-        h3 test foo
-
-        div.btn-row
-            button(class='foo', id='StartGame') Start Game
-            button(class='foo', id='NextTurn') Next Turn
 
         div.results
             svg
 
+        div.btn-row
+            button(class='foo', id='StartGame') New Game
+            button(class='foo', id='NextTurn') Next Turn

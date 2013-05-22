@@ -140,7 +140,7 @@ function Board(maxX, maxY){
             }
         }
 
-        console.log("NeighborCnt:", location, cnt);
+        //console.log("NeighborCnt:", location, cnt);
         return cnt;
     };
 
