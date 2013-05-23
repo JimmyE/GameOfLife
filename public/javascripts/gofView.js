@@ -11,6 +11,8 @@
 
         $('body').on('click', '#NextTurn', self.nextTurn);
 
+        $('body').on('click', 'circle', self.circleClick);
+
         svg = d3.select('svg');
 
         /*
@@ -68,6 +70,10 @@
         self.renderBoard();
     };
 
+    this.circleClick = function() {
+        console.log("Circle click", this);
+    };
+
     this.renderBoard = function() {
         var board = self.game.GetBoard();
 
@@ -95,11 +101,12 @@
             .attr('cx', function(d) { return (d[0] + 1) * 10;} )
             .attr('cy', function(d) { return (d[1] + 1) * 10;} )
             .attr('r', 4)
+            .attr('data-loc', function(d) { return d[0] + "," + d[1];})
             .style('fill', function(d) {
                 if (d[2] ){
                     return 'green';  //safe, cell will live another turn
                 }
-                return 'blue';
+                return 'black';
             });
 //            .style('fill', 'blue');
 
@@ -132,10 +139,15 @@
             new Location(17,20),
             new Location(17,21),
             new Location(18,19),
-
             new Location(12,20),
             new Location(0, 10),
-            new Location(0, 11)
+            new Location(0, 11),
+            new Location(20,10),
+            new Location(20,11),
+            new Location(19,10),
+            new Location(22,10),
+            new Location(22,11),
+            new Location(23,10)
 
         ];
         return cells;

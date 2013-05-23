@@ -99,6 +99,8 @@ function Board(maxX, maxY){
     this.Evaluate = function() {
         var stillAlive = [];
         //debugger;
+
+        // check live cells to see if they still live!
         for (var i = 0; i < this._liveCells.length; i++) {
             var cell = this._liveCells[i];
             if (cell.IsAlive(this._countNeighbors(cell))) {
@@ -108,6 +110,30 @@ function Board(maxX, maxY){
         }
 
         this._liveCells = stillAlive;
+       // this.PrintBoard();
+
+        var newCells = [];
+        //check dead cells for rebirth
+        var emptyCells = this._getEmptyCells();
+        for (i = 0; i< emptyCells.length; i++) {
+            var cell2 = emptyCells[i];
+            //console.log("cell2", cell2, this._countNeighbors(cell2));
+            if (this._countNeighbors(cell2) === 3) {
+                newCells.push(cell2);
+                //console.log("Bring back! : " + cell2.X + "-" + cell2.Y, this._getLiveNeighbors(cell2));
+            }
+        }
+
+        var unsortedCells = this._liveCells.concat(newCells);
+
+        this._liveCells = unsortedCells.sort(function(r,l) {
+            if (r.X !== l.X) {
+                return r.X - l.X;
+            }
+            return r.Y - l.Y;
+        });
+
+        //this.PrintBoard();
     };
 
     this.PrintBoard = function() {
@@ -123,6 +149,22 @@ function Board(maxX, maxY){
         }
     };
 
+    this._getEmptyCells = function() {
+        //debugger;
+        var emptyCells = [];
+        for (var x = 0; x < this.TopEdge.X; x++) {
+            for (var y = 0; y < this.RightEdge.Y; y++) {
+                var tmp = this._getCellAt(new Location(x, y));
+                if (tmp === null) {
+                    //console.log("empty cell: " + x + " " + y);
+                    emptyCells.push(new Location(x,y));
+                }
+            }
+        }
+
+        return emptyCells;
+    };
+
     this._getCellAt = function (location) {
         for (var i = 0; i < this._liveCells.length; i++) {
             if ( this._liveCells[i].IsEqual(location)) {
@@ -133,6 +175,7 @@ function Board(maxX, maxY){
     };
 
     this._countNeighbors = function(location) {
+        /*
         var cnt = 0;
         for (var i = 0; i < this._liveCells.length; i++) {
             if (this.AreNeighbors(location, this._liveCells[i])) {
@@ -142,6 +185,18 @@ function Board(maxX, maxY){
 
         //console.log("NeighborCnt:", location, cnt);
         return cnt;
+        */
+        return this._getLiveNeighbors(location).length;
+    };
+
+    this._getLiveNeighbors = function(location) {
+        var neighbors = [];
+        for (var i = 0; i < this._liveCells.length; i++) {
+            if (this.AreNeighbors(location, this._liveCells[i])) {
+                neighbors.push(this._liveCells[i]);
+            }
+        }
+        return neighbors;
     };
 
     this._isLocationValid = function(cell) {

@@ -142,7 +142,7 @@ describe ("Game creation", function() {
 
 describe ("Evaluate board", function () {
     beforeEach(function() {
-        board = new Board(3,3);
+        board = new Board(5,5);
     });
 
     it ("when board cell have no neighbors, then evaluate removes all of them", function(){
@@ -183,9 +183,47 @@ describe ("Evaluate board", function () {
         expect(board.AreNeighbors(loc1, loc2)).toBeTruthy();
     });
 
-    it ("when 2 cells arenot adjacent, then AreNeigbors returns false", function(){
+    it ("when 2 cells are not adjacent, then AreNeigbors returns false", function(){
         var loc1 = new Location(1,1);
         var loc2 = new Location(1,3);
         expect(board.AreNeighbors(loc1, loc2)).toBeFalsy();
+    });
+
+    it ('when dead cell has 3 live neighbors, then evaulate turns it to live cell', function() {
+        var c4 = new Location(0,0);   //needed to keep 1,0 & 1,1 alive
+        var c1 = new Location(1,0);
+        var c2 = new Location(1,1);   //2,1 is dead now, but should turn live
+        var c3 = new Location(3,1);
+        var c5 = new Location(4,1);  //needed to keep 3,1 alive
+        var c6 = new Location(4,2);  //needed to keep 3,1 alive
+        board.InitializeBoard([c1, c2, c3, c4, c5, c6]);
+        expect(board.GetLiveCellCount()).toEqual(6);  //confirm setup
+        //var foo = board._getEmptyCells();
+
+        board.Evaluate();
+        //board.PrintBoard();
+        var lazarus = board._getCellAt(new Location(2,1));
+        expect(lazarus).toBeTruthy();
+
+    });
+
+    it ('when dead cell has 2 live neighbors, then evaulate does NOT turn it to live cell', function() {
+        var c4 = new Location(0,0);   //needed to keep 1,0 & 1,1 alive
+        var c1 = new Location(1,0);
+        var c2 = new Location(1,1);
+        //var c3 = new Location(3,1);  //2,1 won't turn live
+        var c5 = new Location(4,1);
+        var c6 = new Location(4,2);
+        board.InitializeBoard([c1, c2, c4, c5, c6]);
+
+        board.Evaluate();
+
+        //console.log("AFTER");
+        //board.PrintBoard();
+        var lazarus = board._getCellAt(new Location(2,1));
+        //var foo = board._getLiveNeighbors(lazarus);
+        //console.log("neighbors:", foo);
+        expect(lazarus).toBeNull();
+
     });
 });
