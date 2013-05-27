@@ -80,6 +80,28 @@ describe ("Board layout", function(){
      });
 });
 
+describe ("Board updates", function() {
+    beforeEach(function() {
+        board = new Board(10,10);
+    });
+
+    it ("when cell is added, then board is updated", function() {
+        board.InitializeBoard([]);  //empty board
+
+        board.AddCell(new Location(1,1));
+        expect(board.GetLiveCellCount()).toEqual(1);
+    });
+
+    it ("when cell is added on location already occupied, then board is not updated", function() {
+        board.InitializeBoard([]);  //empty board
+
+        board.AddCell(new Location(1,1));
+        board.AddCell(new Location(1,1));
+        expect(board.GetLiveCellCount()).toEqual(1);
+    });
+
+});
+
 describe ("Game creation", function() {
     it ("When create new game, set the board dimensions", function() {
         var game = new GameOfLife();

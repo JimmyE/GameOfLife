@@ -7,8 +7,10 @@ a {
 }
 svg {
   border: 5px #323232 solid;
-  height: 310px;
+  /*height: 310px;
   width: 310px;
+  */
+
 }
 .gof-ok {
   fill: green;
@@ -27,4 +29,13 @@ svg {
 }
 .btn-row button {
   margin-left: 10px;
+}
+.game-info {
+  margin-top: 9px;
+}
+.game-info label {
+  font-weight: bold;
+}
+.game-info #TurnFld {
+  margin-left: 5px;
 }

@@ -3,6 +3,9 @@
     var self = this;
     var svg;
     var turnCntr = 0;
+    var circleRadius = 5;    //radius
+    var cellSize = 10;
+    var boardSize = 310;
 
 
     $(document).ready(function() {
@@ -13,35 +16,24 @@
 
         $('body').on('click', 'circle', self.circleClick);
 
+        $('#NextTurn').attr('disabled', true);
+        $('svg')
+            .attr('width', boardSize)
+            .attr('height', boardSize);
+
+
+        /*
+         $('body').on('click', 'svg', function(e) {
+         console.log("svg clicked", e);
+         });
+         */
         svg = d3.select('svg');
 
-        /*
-        svg.append("line")
-            .attr("x1", 1)
-            .attr("y1", 1)
-            .attr("x2", 1)
-            .attr("y2", 350)
-            .attr("stroke-width", 5)
-            .attr("stroke", "red");
-
-        svg.append("line")
-            .attr("x1", 1)
-            .attr("y1", 1)
-            .attr("x2", 350)
-            .attr("y2", 1)
-            .attr("stroke-width", 5)
-            .attr("stroke", "red");
-            */
-        /*
-        var borderPath = svg.append("rect")
-            .attr("x", 1)
-            .attr("y", 1)
-            .attr("height", 300)
-            .attr("width", 300)
-            .style("stroke", "red")
-            .style("fill", "none")
-            .style("stroke-width", 5);
-            */
+        svg.append("rect")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .style('fill', "white")
+            .on("click", self.clickGameSquare);
     });
 
     //this.game;
@@ -61,6 +53,8 @@
         board.InitializeBoard(cells);
 
         self.turnCntr = 1;
+        $('#NextTurn').attr('disabled', false);
+
         self.renderBoard();
     };
 
@@ -71,8 +65,38 @@
     };
 
     this.circleClick = function() {
-        console.log("Circle click", this);
+        var cx = $(this).attr('cx');
+        var cy = $(this).attr('cy');
+        console.log("circle click, data-loc: " + $(this).data('loc'));
+        var cell = self.convertCoordinateToCell(cx, cy);
     };
+
+    this.clickGameSquare = function(d, i) {
+        var clickXY = d3.mouse(this);
+        var cx = clickXY[0];
+        var cy = clickXY[1];
+        //console.log("x: " + cx + "  y: " + cy);
+        var cell = self.convertCoordinateToCell(cx, cy);
+        self.addNewCell(cell);
+    };
+
+    this.convertCoordinateToCell = function(cx,cy) {
+        console.log("x: " + cx + "  y: " + cy);
+        var x = Math.floor(cx / cellSize);
+        var y = Math.floor(cy / cellSize);
+        console.log("cell: " + x + "." + y);
+        //if (x < 0 || y < 0) {
+        //    return []; // outside bounds
+        //}
+        return new Location(x, y);
+    };
+
+    this.addNewCell = function(location) {
+        var board = self.game.GetBoard();
+        board.AddCell(location);
+        self.renderBoard();
+    };
+
 
     this.renderBoard = function() {
         var board = self.game.GetBoard();
@@ -96,11 +120,12 @@
         d3Board.exit().remove();
 
         //update/refresh
-        d3Board.transition()
-            .duration(1500)
-            .attr('cx', function(d) { return (d[0] + 1) * 10;} )
-            .attr('cy', function(d) { return (d[1] + 1) * 10;} )
-            .attr('r', 4)
+        d3Board
+            .transition()
+            .duration(500)
+            .attr('cx', function(d) { return (d[0] + 1) * cellSize;} )
+            .attr('cy', function(d) { return (d[1] + 1) * cellSize;} )
+            .attr('r', circleRadius)//todo? can't use self.circleRadius; why?
             .attr('data-loc', function(d) { return d[0] + "," + d[1];})
             .style('fill', function(d) {
                 if (d[2] ){
@@ -110,6 +135,7 @@
             });
 //            .style('fill', 'blue');
 
+        $('#TurnFld').text(self.turnCntr);
     };
 
     this.convertLocationToD3Coordinate = function (location) {
@@ -121,7 +147,7 @@
     this.getTestData1 = function () {
 
         var cells = [
-            new Location(1,1),
+            new Location(0,0),
             new Location(1,2),
             new Location(1,3),
             new Location(2,1),
@@ -147,8 +173,8 @@
             new Location(19,10),
             new Location(22,10),
             new Location(22,11),
-            new Location(23,10)
-
+            new Location(23,10),
+            new Location(29,29)
         ];
         return cells;
     };

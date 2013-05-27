@@ -74,8 +74,6 @@ function Board(maxX, maxY){
     };
 
     this.AddCell = function(cell) {
-//        if (cell.X < this.TopEdge.X && cell.X >= 0 &&
-//            cell.Y < this.RightEdge.Y && cell.Y >= 0){
 
         if (this._isLocationValid(cell)) {
             var existingCell = this._getCellAt(cell);
