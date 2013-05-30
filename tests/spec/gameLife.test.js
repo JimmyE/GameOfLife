@@ -28,6 +28,44 @@ describe ("Class construction and initialization", function() {
         expect(loc.X).toEqual(1);
         expect(loc.Y).toEqual(2);
     });
+
+    it ("when ctor location passed no parameters, then location has 0,0", function () {
+       var loc = new Location();
+
+        expect(loc.X).toEqual(0);
+        expect(loc.Y).toEqual(0);
+    });
+});
+
+describe ("Location methods", function () {
+    it ("when location has same coordinates, then IsEqual returns true", function(){
+        var loc1 = new Location(1,2);
+        var loc2 = new Location(1,2);
+
+        expect(loc1.IsEqual(loc2)).toBeTruthy();
+    });
+
+    it ("when location has different coordinates, then IsEqual returns false", function(){
+        var loc1 = new Location(1,2);
+        var loc2 = new Location(2,1);
+
+        expect(loc1.IsEqual(loc2)).toBeFalsy();
+    });
+
+    it ("when getting distance for 1-1 and 1-2 then distance is 1", function (){
+        var loc1 = new Location(1,1);
+        var loc2 = new Location(1,2);
+
+        expect(loc1.CalculateDistance(loc2)).toBe(1);
+    });
+
+    it ("when getting distance for 1-1 and 2-2 then distance is 1", function (){
+        //catty-corner test
+        var loc1 = new Location(1,1);
+        var loc2 = new Location(2,2);
+
+        expect(loc1.CalculateDistance(loc2)).toBe(1);
+    });
 });
 
 describe ("Board layout", function(){

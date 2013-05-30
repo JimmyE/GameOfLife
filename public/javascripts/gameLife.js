@@ -1,48 +1,41 @@
 
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
-function Location(x, y) {
-    this.X = x || 0;
-    this.Y = y || 0;
-}
-Location.prototype.CalculateDistance = function(loc) {
-    var dx = Math.abs (this.X - loc.X);
-    var dy = Math.abs (this.Y - loc.Y);
-    if (dx !== dy ){
-        return dx + dy;
-    }
 
-    //else diagonal/caty-corner
-    return dx;
+var Location = function (x,y) {
+    var self = this;
+
+    self.X = x || 0;
+    self.Y = y || 0;
+
+    self.CalculateDistance = function(loc) {
+        var dx = Math.abs (self.X - loc.X);
+        var dy = Math.abs (self.Y - loc.Y);
+        if (dx !== dy ){
+            return dx + dy;
+        }
+
+        //else diagonal/caty-corner
+        return dx;
+    };
+
+    self.IsEqual = function (loc) {
+        return (loc.X === self.X && loc.Y === self.Y);
+    };
+
+    self.IsAlive = function(neighborCnt) {
+        //where does this method belong? Game rules?
+        return neighborCnt === 2 || neighborCnt === 3;
+    };
+
+    return {
+        IsAlive : self.IsAlive,
+        CalculateDistance : self.CalculateDistance,
+        IsEqual : self.IsEqual,
+        X : self.X,
+        Y : self.Y
+    };
 };
-
-Location.prototype.IsEqual = function (loc) {
-    return (loc.X === this.X && loc.Y === this.Y);
-};
-
-Location.prototype.GetNeighborLocations = function () {
-    var results = [];
-    //1 row above
-    results.push( new Location(this.X - 1, this.Y + 1));
-    results.push( new Location(this.X, this.Y + 1));
-    results.push( new Location(this.X + 1, this.Y + 1));
-
-    //same row height
-    results.push( new Location(this.X - 1, this.Y));
-    results.push( new Location(this.X + 1, this.Y));
-
-    //1 row below
-    results.push( new Location(this.X - 1, this.Y - 1));
-    results.push( new Location(this.X, this.Y - 1));
-    results.push( new Location(this.X + 1, this.Y - 1));
-
-    return results;
-};
-
-Location.prototype.IsAlive = function(neighborCnt) {
-    return neighborCnt === 2 || neighborCnt === 3;
-};
-
 
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
