@@ -94,8 +94,6 @@ describe ("Board layout", function(){
 
             expect(board.AreNeighbors(c1, c2)).toBeFalsy();
         });
-
-
     });
 
     describe ("Board creation", function() {
@@ -116,6 +114,12 @@ describe ("Board layout", function(){
             expect( function() { new Board(0, 1);}).toThrow(new Error("Invalid board dimensions"));
         });
      });
+
+    describe ("Board other functions", function() {
+        it ("when GetCells, then", function() {
+            board.getCells();
+        });
+    });
 });
 
 describe ("Board updates", function() {
@@ -262,7 +266,7 @@ describe ("Evaluate board", function () {
 
         board.Evaluate();
         //board.PrintBoard();
-        var lazarus = board._getCellAt(new Location(2,1));
+        var lazarus = board._getCellAtTestOnly(new Location(2,1));
         expect(lazarus).toBeTruthy();
 
     });
@@ -280,10 +284,34 @@ describe ("Evaluate board", function () {
 
         //console.log("AFTER");
         //board.PrintBoard();
-        var lazarus = board._getCellAt(new Location(2,1));
+        var lazarus = board._getCellAtTestOnly(new Location(2,1));
         //var foo = board._getLiveNeighbors(lazarus);
         //console.log("neighbors:", foo);
         expect(lazarus).toBeNull();
 
+    });
+});
+
+describe ("GameOfLife class", function (){
+
+    it ("when newGame then new board is empty", function (){
+        var game = new GameOfLife();
+
+        var board = game.NewGame(9,8);
+        expect(board.GetLiveCellCount()).toEqual(0);
+        expect(board.TopEdge.X).toEqual(9);
+        expect(board.TopEdge.Y).toEqual(0);
+        expect(board.RightEdge.X).toEqual(0);
+        expect(board.RightEdge.Y).toEqual(8);
+    });
+
+    it ("when NextTurn is called, then Evaluate is called", function (){
+        var game = new GameOfLife();
+
+        var board = game.NewGame(9,8);
+        spyOn(board, "Evaluate");
+        game.NextTurn();
+
+        expect(board.Evaluate).toHaveBeenCalled();
     });
 });

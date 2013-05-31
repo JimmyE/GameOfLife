@@ -21,12 +21,6 @@
             .attr('width', boardSize)
             .attr('height', boardSize);
 
-
-        /*
-         $('body').on('click', 'svg', function(e) {
-         console.log("svg clicked", e);
-         });
-         */
         svg = d3.select('svg');
 
         svg.append("rect")
@@ -75,19 +69,13 @@
         var clickXY = d3.mouse(this);
         var cx = clickXY[0];
         var cy = clickXY[1];
-        //console.log("x: " + cx + "  y: " + cy);
         var cell = self.convertCoordinateToCell(cx, cy);
         self.addNewCell(cell);
     };
 
     this.convertCoordinateToCell = function(cx,cy) {
-        console.log("x: " + cx + "  y: " + cy);
         var x = Math.floor(cx / cellSize);
         var y = Math.floor(cy / cellSize);
-        console.log("cell: " + x + "." + y);
-        //if (x < 0 || y < 0) {
-        //    return []; // outside bounds
-        //}
         return new Location(x, y);
     };
 
@@ -97,11 +85,10 @@
         self.renderBoard();
     };
 
-
     this.renderBoard = function() {
         var board = self.game.GetBoard();
 
-        var cells = board.GetCells();
+        var cells = board.getCells();
 
         console.log("turn #" + self.turnCntr + "  live cells " + cells.length);
 
