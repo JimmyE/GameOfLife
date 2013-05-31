@@ -1,5 +1,5 @@
 // requires gameLife.js
-(function() {
+var GameOfLifeView = function() {
     var self = this;
     var svg;
     var turnCntr = 0;
@@ -8,7 +8,8 @@
     var boardSize = 310;
 
 
-    $(document).ready(function() {
+//    $(document).ready(function() {
+    var init = function() {
 
         $('body').on('click', '#StartGame', self.startGame);
 
@@ -28,7 +29,7 @@
             .attr("height", "100%")
             .style('fill', "white")
             .on("click", self.clickGameSquare);
-    });
+    };
 
     //this.game;
 
@@ -185,5 +186,10 @@
         ];
 
         return cells;
-    }
-})();
+    };
+
+    return {
+        init: init,
+        startGame : this.startGame
+    };
+};
